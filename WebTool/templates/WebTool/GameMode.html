@@ -1,0 +1,132 @@
+{% extends "WebTool/layout.html" %}
+{% load dbutils %}
+{% block main_body %}
+
+<p>게임 모드 관리</p>
+<div class="panel-body" id="app">
+    <table class="table table-hover" style="width: 714px;">
+        <thead>
+            <tr>
+                <th style="width: 80px;">출력순서</th>
+                <th style="width: 90px;">모드인덱스</th>
+                <th style="width: 130px;">모드네임</th>
+                <th style="width: 90px;" class="text-right">팀최대인원</th>
+                <th style="width: 80px;" class="text-right">맵코드</th>
+                <th style="width: 80px;" class="text-right">출력</th>
+            </tr>
+        </thead>
+        <tbody >
+            <tr v-for="(row,index) in rows.mode">
+                <td>
+                    <input class="form-control" v-model="row.order" />
+                </td>
+                <td>
+                    <input class="form-control" v-model="row.modeindex" />
+                </td>
+                <td>
+                    <input class="form-control" v-model="row.name" number/>
+                </td>
+                <td>
+                    <input class="form-control" v-model="row.team_user_count" number/>
+                <!--
+                <select class="form-control" v-model="row.tax">
+                                            <option value="0">0%</option>
+                                            <option value="10">10%</option>
+                                            <option value="20">20%</option>
+                                        </select>
+                                        -->
+                </td>
+                <td>
+                    <input class="form-control" v-model="row.map_code" number/>
+                </td>
+                <td>
+                    <input class="form-control" v-model="row.on_off" number/>
+                </td>
+                <td>
+                    <button class="btn btn-primary btn-xs" @click="addRow([[ index ]])">add row</button>
+                    <button class="btn btn-danger btn-xs" @click="removeRow([[ index ]])">remove row</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button @click="getData()">SUBMIT DATA</button>
+    <pre>[[ $data  ]]</pre>
+</div>
+
+<script type="text/javascript">
+
+var strModeTable = "{% GetModeTable %}".replace(/&quot;/gi,"\"");;
+strModeTable =strModeTable.replace(/&quot;/gi,"");
+strModeTable =strModeTable.replace(/&#39;/gi,"\"");
+
+console.log(strModeTable );
+var vm = new Vue({
+    delimiters: ['[[', ']]'],
+    el: '#app',
+    data: {
+        rows: [],
+      total: 0,
+        grandtotal: 0,
+        taxtotal: 0,
+        delivery: 40
+        }
+,
+    computed: {
+        ontotal: function () {
+            var t = 0;
+            $.each(this.rows, function (i, e) {
+                t += accounting.unformat(e.total, ",");
+            });
+            return t;
+        },
+        ontaxtotal: function () {
+            var tt = 0;
+            $.each(this.rows, function (i, e) {
+                tt += accounting.unformat(e.tax_amount, ",");
+            });
+            return tt;
+        }
+    },
+  mounted : function()
+  {
+        try{
+            this.rows = $.parseJSON(strModeTable);
+            }
+           catch(error){
+            console.log(error.message);
+           }
+  }
+    ,
+    methods: {
+        addRow: function (index) {
+            try {
+                this.rows.mode.splice(index , 0, {});
+            } catch(e)
+            {
+                console.log(e);
+            }
+        },
+        removeRow: function (index) {
+            this.rows.mode.splice(index, 1);
+        },
+        getData: function () {
+            $.ajax({
+                context: this,
+                type: "POST",
+                data: {
+                    rows: this.rows,
+                    total: this.total,
+                    delivery: this.delivery,
+                    taxtotal: this.taxtotal,
+                    grandtotal: this.grandtotal,
+                },
+                url: "/api/data"
+            });
+        }
+    }
+});
+
+console.log("mode end");
+</script>
+{% endblock %}
+

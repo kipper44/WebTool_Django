@@ -2,30 +2,54 @@ from couchbase.cluster import Cluster
 from couchbase.cluster import PasswordAuthenticator
 from WebTool.common.Singleton import  SingletonInstance
 from couchbase.n1ql import N1QLQuery
+from WebTool.common.common import eDataBase
 
 class CouchbaseManager(SingletonInstance) :
     def __init__(self):
         self.mapDbPool ={}
-        self.selectKey =''
+        self.selectKey =1
+        self.mapServerInfo = {}
+        self.selectServer=""
 
-    def Add(self, name, ip, username, passwd, bucket):
+    def AddServerInfo(self,name,objInfo):
+        self.mapDbPool[name] = objInfo;
+
+    def SelectServer(self,servername):
+        cSelectServer = self.mapDbPool[servername]
+        Index = eDataBase.GAME_EVENT;
+        for bucket in cSelectServer.DB:
+            ip = bucket.uri[7:]
+            ip = ip[:-11]
+            self.Add(Index,bucket.bucket,ip,bucket.User,bucket.bucketPassword,bucket.bucket)
+        self.selectServer = servername
+
+    def Add(self,idx, name, ip, username, passwd, bucket):
         cluster = Cluster('couchbase://' + ip)
         authenticator = PasswordAuthenticator(username, passwd)
         cluster.authenticate(authenticator)
         cBucket = cluster.open_bucket(bucket)
+        #print(cBucket)
+        self.mapDbPool[idx] = cBucket;
 
-        self.mapDbPool[name] = cBucket;
     def get(self):
         return self.mapDbPool[self.selectKey];
-    def get_bucket(self,bucket_name):
-        #print(self.mapDbPool)
-        return self.mapDbPool[bucket_name]
 
-    def select_db(self,strSelectKey):
-        self.selectKey = strSelectKey;
-        print(self.selectKey)
+    def get_bucket(self,bucket_idx):
+        #print(self.mapDbPool)
+        return self.mapDbPool[bucket_idx]
+
+    def select_db(self,iSelectKey):
+        self.selectKey = iSelectKey;
 
     def get_server_list(self):
-        aa = self.mapDbPool[self.selectKey]
+        cBucket = self.mapDbPool[self.selectKey]
         query = N1QLQuery("select name,IP,Port,DB from GmTool_GM where strType ='server'")
-        return aa.n1ql_query(query)
+        return cBucket.n1ql_query(query)
+
+    def RunQuery(self,strQuery):
+        #print(self.selectKey)
+        print(self.mapDbPool)
+        cSelectPool = self.mapDbPool[self.selectKey]
+        #print(cSelectPool)
+        query = N1QLQuery(strQuery)
+        return cSelectPool.n1ql_query(query)
