@@ -3,20 +3,23 @@
 {% block main_body %}
 
 <p>게임 모드 관리</p>
-<div class="panel-body" id="app">
-    <table class="table table-hover" style="width: 714px;">
-        <thead>
+<div id="app" class="container" >
+    <!--<div style="width: 714px;height:400px; overflow:auto;"> -->
+    <table class="table"  style="width: 714px ; height:300px">
+        <thead >
             <tr>
-                <th style="width: 80px;">출력순서</th>
-                <th style="width: 90px;">모드인덱스</th>
-                <th style="width: 130px;">모드네임</th>
-                <th style="width: 90px;" class="text-right">팀최대인원</th>
-                <th style="width: 80px;" class="text-right">맵코드</th>
-                <th style="width: 80px;" class="text-right">출력</th>
+                <th class="text-center" style="width: 80px">출력순서</th>
+                <th class="text-center" style="width: 90px">모드인덱스</th>
+                <th class="text-center" style="width: 120px">모드네임</th>
+                <th class="text-center" style="width: 90px">최대인원</th>
+                <th class="text-center" style="width: 60px">맵코드</th>
+                <th class="text-center" style="width: 60px">출력</th>
+                <th class="text-center" style="width: 50px"></th>
+                <th class="text-center" style="width: 60px"></th>
             </tr>
         </thead>
-        <tbody >
-            <tr v-for="(row,index) in rows.mode">
+        <tbody  >
+            <tr v-for="(row,index) in table.mode">
                 <td>
                     <input class="form-control" v-model="row.order" />
                 </td>
@@ -40,16 +43,17 @@
                     <input class="form-control" v-model="row.map_code" number/>
                 </td>
                 <td>
-                    <input class="form-control" v-model="row.on_off" number/>
+                    <input type="checkbox" class="form-control" v-model="row.on_off" number/>
                 </td>
                 <td>
-                    <button class="btn btn-primary btn-xs" @click="addRow([[ index ]])">add row</button>
-                    <button class="btn btn-danger btn-xs" @click="removeRow([[ index ]])">remove row</button>
+                    <button class="form-control btn btn-primary btn-xs" @click="addRow([[ index ]])">add</button>
                 </td>
+                <td><button class="form-control btn btn-danger btn-xs" @click="removeRow([[ index ]])">remove</button></td>
             </tr>
         </tbody>
     </table>
-    <button @click="getData()">SUBMIT DATA</button>
+    <!--</div> -->
+    <button v-on:click="getData">SUBMIT DATA</button>
     <pre>[[ $data  ]]</pre>
 </div>
 
@@ -58,39 +62,21 @@
 var strModeTable = "{% GetModeTable %}".replace(/&quot;/gi,"\"");;
 strModeTable =strModeTable.replace(/&quot;/gi,"");
 strModeTable =strModeTable.replace(/&#39;/gi,"\"");
-
-console.log(strModeTable );
 var vm = new Vue({
     delimiters: ['[[', ']]'],
     el: '#app',
     data: {
-        rows: [],
+        table: [],
       total: 0,
         grandtotal: 0,
         taxtotal: 0,
         delivery: 40
         }
 ,
-    computed: {
-        ontotal: function () {
-            var t = 0;
-            $.each(this.rows, function (i, e) {
-                t += accounting.unformat(e.total, ",");
-            });
-            return t;
-        },
-        ontaxtotal: function () {
-            var tt = 0;
-            $.each(this.rows, function (i, e) {
-                tt += accounting.unformat(e.tax_amount, ",");
-            });
-            return tt;
-        }
-    },
   mounted : function()
   {
         try{
-            this.rows = $.parseJSON(strModeTable);
+            this.table = $.parseJSON(strModeTable);
             }
            catch(error){
             console.log(error.message);
@@ -100,33 +86,25 @@ var vm = new Vue({
     methods: {
         addRow: function (index) {
             try {
-                this.rows.mode.splice(index , 0, {});
+                this.table.mode.splice(index , 0, {});
             } catch(e)
             {
                 console.log(e);
             }
         },
         removeRow: function (index) {
-            this.rows.mode.splice(index, 1);
+            this.table.mode.splice(index, 1);
         },
         getData: function () {
-            $.ajax({
-                context: this,
-                type: "POST",
-                data: {
-                    rows: this.rows,
-                    total: this.total,
-                    delivery: this.delivery,
-                    taxtotal: this.taxtotal,
-                    grandtotal: this.grandtotal,
-                },
-                url: "/api/data"
-            });
+            alert(this.table);
+                $.post('/ModeView',{ call_type: 0 , table:JSON.stringify(this.table)},function(data,status){
+                    if ( "true" == data.Result )
+                        alert(data.Result);
+                        //window.location.href = '/LoginMain';
+                });
         }
     }
 });
-
-console.log("mode end");
 </script>
 {% endblock %}
 

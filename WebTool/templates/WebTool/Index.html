@@ -8,11 +8,30 @@
     <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.5"></script>
     <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 
+    <!-- bootstrap-->
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+
     <script type="text/javascript" src="{% static 'js/csrf_token_setup.js' %}"></script >
     <link rel="stylesheet" href="{% static 'css/modaldialog.css' %}" type="text/css">
+
     <meta charset="UTF-8">
     <style>
-
+        #Login
+        {
+         position: absolute;
+         width: 330px;
+         height: 150px;
+         left: 50%;
+         top: 50%;
+         margin-left: -250px;
+         margin-top: -250px;
+        }
     </style>
 
 </head>
@@ -51,20 +70,31 @@
 
     <div id="Login">
         <title>[[title]]</title>
-        <p></p>
-        <label>Select Server : </label>
-        <select v-model="selectedserver">
-               <option v-for="sv in servers" v-bind:value="sv" >
-                [[ sv ]]
-              </option>
-        </select></br>
-
-        <label>Login ID : </label><input v-model="userid" ></br>
-        <label>Password : </label><input v-model="pass" type="password" >
-
-        <button v-on:click="onlogin" >접속</button>
-        <button id="show-modal" @click="showModal = true">Show Modal</button>
-    <span>Selected: [[ selectedserver ]]</span>
+        <table >
+            <tr>
+                <td align="right"><label>Select Server : </label></td>
+                <td>
+                    <select v-model="selectedserver" class="form-control">
+                           <option v-for="sv in servers" v-bind:value="sv" >
+                            [[ sv ]]
+                          </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><label>Login ID : </label></td>
+                <td><input v-model="userid"  class="form-control"></td>
+            </tr>
+            <tr>
+                <td align="right"><label>Password : </label></td>
+                <td><input v-model="pass" type="password" class="form-control" ></td>
+            </tr>
+        </table>
+        <br>
+        <button v-on:click="onlogin" class="btn btn-primary " style="margin-left: 132px;" >접속</button>
+        <button id="show-modal" @click="showModal = true" class="btn btn-primary " style="margin-left: 0px;">Show Modal</button>
+        <br>
+       <span>Selected: [[ selectedserver ]]</span>
         <modal v-if="showModal" @close="showModal = false">
             <!--
               you can use custom content here to overwrite
@@ -83,7 +113,6 @@
    var  strServers = "{{ server_list }}";
     strServers = strServers.replace(/&quot;/gi,"\"");
     strServers = strServers.replace(/&quot;/gi,"\"");
-
     var cVeuVm = new Vue({
             delimiters: ['[[', ']]'],
             el: '#Login',
@@ -108,7 +137,6 @@
                         alert(data.Result);
                         window.location.href = '/LoginMain';
                 });
-
                 },
                 onnewaccount: function (e) {
                   console.log(e.target.tagName) // "A"
@@ -121,5 +149,4 @@
                     this.selectedserver = this.servers[0];
               }
     });
-
 </script>

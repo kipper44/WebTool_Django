@@ -6,23 +6,21 @@ from collections import namedtuple
 import json
 from django.http import JsonResponse,HttpResponse
 
-def SaveModeData(request):
+def SaveRotationData(request):
     data = request.POST.get('table')
-    cModeTable = json.loads(data)
+    cRotationTable = json.loads(data)
     cbq = CouchbaseManager.instance()
     cbq.select_db(eDataBase.GAME_EVENT)
-    cbq.get().upsert("ModeTable_Python",cModeTable)
+    cbq.get().upsert("RotationTable_Python",cRotationTable)
     return JsonResponse({'Result': "true"}, safe=False)
 
 def PostProcess(request):
     iType = request.POST.get('call_type')
     if iType == '0' :
-        return SaveModeData(request)
+        return SaveRotationData(request)
 
     return JsonResponse({'Result': "true"}, safe=False)
-
-def ModeView(request):
+def RotationView(request):
     if request.method =='POST' :
         return PostProcess(request)
-
-    return render(request, 'WebTool/GameMode.html')
+    return render(request, 'WebTool/Rotation.html')

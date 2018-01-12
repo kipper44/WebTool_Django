@@ -1,0 +1,153 @@
+{% extends "WebTool/layout.html" %}
+{% load dbutils %}
+{% load staticfiles %}
+
+{%block main_header %}
+
+{% endblock %}
+
+{% block main_body %}
+<p>게임 로테이션 관리</p>
+<div id="app" class="container">
+
+    <table class="table"  >
+        <thead >
+            <tr>
+                <th class="text-center" style="width: 80px">인덱스</th>
+                <th class="text-center" style="width: 500px">시작일</th>
+                <th class="text-center" style="width: 500px">종료일</th>
+                <th class="text-center" style="width: 500px">용병</th>
+                <th class="text-center" style="width: 500px">용병</th>
+                <th class="text-center" style="width: 500px">용병</th>
+                <th class="text-center" style="width: 500px">용병</th>
+                <th class="text-center" style="width: 500px">용병</th>
+                <th class="text-center" style="width: 50px"></th>
+                <th class="text-center" style="width: 60px"></th>
+            </tr>
+        </thead>
+        <tbody  >
+            <tr v-for="(row,index) in table.vecRotations">
+                <td>
+                    <input class="form-control" v-model="row.iIndex" />
+                </td>
+                <td>
+                    <date-picker :config="config" name="startdate" class="form-control" v-model="row.strStartDate" />
+                </td>
+                <td>
+                    <date-picker :config="config" name="enddate" class="form-control" v-model="row.strEndDate" />
+                </td>
+                <td>
+                    <select  class="form-control" v-model="row.iTargetIndex_1" number>
+                        <option v-for="em in mert" v-bind:value="em.Value">[[ em.Text ]]</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" v-model="row.iTargetIndex_2" number>
+                        <option v-for="em in mert" v-bind:value="em.Value">[[ em.Text ]]</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" v-model=row.iTargetIndex_3>
+                        <option v-for="em in mert" v-bind:value=em.Value>[[ em.Text ]]</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" v-model=row.iTargetIndex_4>
+                        <option v-for="em in mert" v-bind:value=em.Value>[[ em.Text ]]</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" v-model=row.iTargetIndex_5>
+                        <option v-for="em in mert" v-bind:value=em.Value>[[ em.Text ]]</option>
+                    </select>
+                </td>
+                <td>
+                    <button class="form-control btn btn-primary btn-xs" @click="addRow([[ index ]])">add</button>
+                </td>
+                <td><button class="form-control btn btn-danger btn-xs" @click="removeRow([[ index ]])">remove</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <button v-on:click="save_data">SUBMIT DATA</button>
+    <pre>[[ $data  ]]</pre>
+</div>
+<script>
+var strRotationTable = "{% GetRotationTable %}".replace(/&quot;/gi,"\"");;
+strRotationTable =strRotationTable.replace(/&quot;/gi,"");
+strRotationTable =strRotationTable.replace(/&#39;/gi,"\"");
+
+var strMercenary = "{% GetRotationMerTable %}".replace(/&quot;/gi,"\"");;
+strMercenary =strMercenary.replace(/&quot;/gi,"");
+strMercenary =strMercenary.replace(/&#39;/gi,"\"");
+
+  //Initialize as global component
+  Vue.component('date-picker', VueBootstrapDatetimePicker.default);
+
+  new Vue({
+    delimiters: ['[[', ']]'],
+    el: '#app',
+    data: {
+       table:[],
+       mert:[],
+      config:{
+        useCurrent: true,
+        format:'YYYY-MM-DD HH:mm:ss',
+        showClose: true,
+        showClear: true,
+      }
+    },
+  mounted : function()
+  {
+        try{
+            this.mert = $.parseJSON(strMercenary);
+            this.table = $.parseJSON(strRotationTable);
+             //console.log(this.mert);
+
+            }
+           catch(error){
+            console.log(error.message);
+           }
+  },
+  methods: {
+      onSelectchange (e) {
+        console.log(this.mert[e.target.selectedIndex]["Text"]);
+        console.log(e.target.value);
+        $(e.target).val(this.mert[e.target.selectedIndex]["Value"]);
+        console.log(e.target.value);
+      },
+    on_mer_selected(e) {
+      //console.log(e.target.selectedIndex);
+      console.log(this.mert[e.target.selectedIndex]["Value"]);
+      //var trRow = e.target.parents('td');
+
+
+      var trRow = e.target.parentElement.parentElement;
+      var tdIndex = $(trRow).children("td:nth-child(1)");
+      var iIndex = tdIndex.find('input.form-control');
+      //this.table.vecRotations[iIndex.val()].iTargetIndex_2 = this.mert[e.target.selectedIndex]["Value"];
+      console.log(iIndex.val());
+    },
+        addRow: function (index) {
+            try {
+                this.table.vecRotations.splice(index +1, 0, {});
+            } catch(e)
+            {
+                console.log(e);
+            }
+        },
+        removeRow: function (index) {
+            this.table.mode.splice(index, 1);
+        },
+        save_data:function(){
+                $.post('/RotationView',{ call_type: 0 , table:JSON.stringify(this.table)},function(data,status){
+                    if ( "true" == data.Result )
+                        alert(data.Result);
+                        //window.location.href = '/LoginMain';
+                });
+
+        }
+   }
+  });
+</script>
+{% endblock %}
+

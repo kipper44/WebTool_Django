@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
-from  WebTool.Views import LoginView,ModeView
+from  WebTool.Views import LoginView,ModeView,Rotation
 
 
 urlpatterns = [
@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^Index', LoginView.Index),
     url(r'^LoginMain', LoginView.LoginMain),
     url(r'^ModeView', ModeView.ModeView),
+    url(r'^RotationView', Rotation.RotationView),
 
 
 ]

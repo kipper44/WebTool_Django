@@ -11,6 +11,9 @@ class CouchbaseManager(SingletonInstance) :
         self.mapServerInfo = {}
         self.selectServer=""
 
+    def __str__(self):
+        return self.mapDbPool.__str__()
+
     def AddServerInfo(self,name,objInfo):
         self.mapDbPool[name] = objInfo;
 
@@ -21,6 +24,7 @@ class CouchbaseManager(SingletonInstance) :
             ip = bucket.uri[7:]
             ip = ip[:-11]
             self.Add(Index,bucket.bucket,ip,bucket.User,bucket.bucketPassword,bucket.bucket)
+            Index += 1
         self.selectServer = servername
 
     def Add(self,idx, name, ip, username, passwd, bucket):
@@ -28,7 +32,6 @@ class CouchbaseManager(SingletonInstance) :
         authenticator = PasswordAuthenticator(username, passwd)
         cluster.authenticate(authenticator)
         cBucket = cluster.open_bucket(bucket)
-        #print(cBucket)
         self.mapDbPool[idx] = cBucket;
 
     def get(self):

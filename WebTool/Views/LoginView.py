@@ -58,4 +58,6 @@ def Index(request):
     return render(request,'WebTool/Index.html',{'server_list':json.dumps(list)})
 
 def LoginMain(request):
+    cbq = CouchbaseManager.instance()
+
     return render(request, 'WebTool/LoginMain.html')
