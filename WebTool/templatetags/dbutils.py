@@ -92,3 +92,8 @@ def GetRotationMerTable():
     else:
         pass
     return strJson
+
+@register.simple_tag()
+def GetSelectServerName():
+    cbq = CouchbaseManager.instance()
+    return cbq.get_select_server_name()

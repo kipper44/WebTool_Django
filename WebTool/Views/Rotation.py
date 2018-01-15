@@ -23,4 +23,8 @@ def PostProcess(request):
 def RotationView(request):
     if request.method =='POST' :
         return PostProcess(request)
-    return render(request, 'WebTool/Rotation.html')
+
+    cbq = CouchbaseManager.instance()
+    cServerInfo = cbq.get_select_server_info()
+
+    return render(request, 'WebTool/Rotation.html',{"server_name": cServerInfo.name,"server_ip": cServerInfo.IP})

@@ -10,12 +10,15 @@ class CouchbaseManager(SingletonInstance) :
         self.selectKey =1
         self.mapServerInfo = {}
         self.selectServer=""
-
+        self.strLoginUser =""
     def __str__(self):
         return self.mapDbPool.__str__()
 
     def AddServerInfo(self,name,objInfo):
         self.mapDbPool[name] = objInfo;
+
+    def SetLoginUser(self,strUserName):
+        self.strLoginUser =strUserName
 
     def SelectServer(self,servername):
         cSelectServer = self.mapDbPool[servername]
@@ -56,3 +59,9 @@ class CouchbaseManager(SingletonInstance) :
         #print(cSelectPool)
         query = N1QLQuery(strQuery)
         return cSelectPool.n1ql_query(query)
+
+    def get_select_server_name(self):
+        return self.selectServer
+
+    def get_select_server_info(self):
+        return self.mapDbPool[self.selectServer]

@@ -6,15 +6,21 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title></title>
-		<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
-        <script src="https://unpkg.com/moment@2.18.1/min/moment.min.js"></script>
         <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <!-- Latest compiled JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+        <!-- Latest compiled and minified CSS  https://cdnjs.com/libraries/moment.js/ -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/locale/ko.js"></script>
         <!-- Date-picker itself -->
         <script src="https://unpkg.com/eonasdan-bootstrap-datetimepicker@4.17.47/build/js/bootstrap-datetimepicker.min.js"></script>
         <link href="https://unpkg.com/eonasdan-bootstrap-datetimepicker@4.17.47/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
@@ -26,70 +32,57 @@
         <script src="https://unpkg.com/vue-bootstrap-datetimepicker"></script>
 
 		<script type="text/javascript" src="{% static 'js/csrf_token_setup.js' %}"></script >
-		<link rel="stylesheet" href="{% static 'css/modaldialog.css' %}" type="text/css">
-		<link rel="stylesheet" href="{% static 'css/main_frame.css' %}" type="text/css">
 
         <script src="{% static 'js/tree/tree.jquery.js' %}"></script>
         <link rel="stylesheet" href="{% static 'js/tree/jqtree.css' %}">
         <script src="{% static 'js//tree/jquery.cookie.js' %}"></script>
+        <script src="{% static 'js/websocket.js' %}"></script>
         <!-- http://eonasdan.github.io/bootstrap-datetimepicker/Options/ -->
-
-		<style type="text/css">
-		</style>
 
         {%block main_header %} {% endblock %}
 
 	</head>
 	<body>
-
-		<header id="header">
-			<div id="logo">
-				<p>속전속결 - 운영툴</p>
-			</div>
-		</header>
-
-		<main>
-			<div class="innertube">
-
-                {%block main_body %} {% endblock %}
-
-			</div>
-		</main>
-
-		<nav id="nav">
-			<div class="innertube">
+    <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+         <div class="container-fluid">
+             <div class="navbar-header">
+                <a class="navbar-brand" href="#">속전 속결 운영툴</a>
+             </div>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="nav-item active">
+                <a class="nav-link" href="/LoginMain">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a name="txt_monitor_server" >Settings</a>
+              </li>
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">관리<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">GM 관리</a></li>
+                  <li><a href="#">툴 메뉴관리</a></li>
+                  <li><a href="#">서버 목록 관리</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Logout</a>
+              </li>
+            </ul>
+         </div>
+    </nav>
+      <div class="row">
+        <nav class="col-sm-2 col-md-2 hidden-xs-down bg-faded sidebar">
                 <div id="LeftMenu">
 
                 </div>
+        </nav>
 
-			</div>
-		</nav>
+        <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+             {%block main_body %} {% endblock %}
+        </main>
+      </div>
+
 	</body>
 </html>
-  //항목	관리자	운영자	일반	권한 비트셋
-    //계정정보	o	o	o	36-00011110
-    //매칭정보	o	o	o	36-00011110
-    //맵플레이	o	o	o	36-00011110
-    //튜토리얼	o	o	o	36-00011110
-    //checkReport	o	o	o	36-00011110
-    //아이템판매량	o	o	o	36-00011110
-    //아이템보유량	o	o	o	36-00011110
-    //characterReport	o	o	o	36-00011110
-    //상거래조정	o	o	x	14-00001110
-    //퀘스트조정	o	o	x	14-00001110
-    //매칭셋팅	o	o	x	14-00001110
-    //모드선택	o	o	x	14-00001110
-    //용병로테이션	o	o	x	14-00001110
-    //공지사항	o	o	x	14-00001110
-    //계정접속블럭관리	o	o	x	14-00001110
-    //닉네임금지어추가	o	o	x	14-00001110
-    //아이템지급	o	o	x	14-00001110
-    //유저조회	o	o	x	14-00001110
-    //서버모니터	o	x	x	6-00000110
-    //테스트계정관리	o	x	x	6-00000110
-    //엑셀목록	o	x	x	6-00000110
-    //테스트통계	o	o	x	14-00001110
-    //등급관리	o	x	x	6-00000110
 
 <script type="text/javascript">
 
@@ -137,5 +130,41 @@
             }
         );
     });
-console.log("menu init complete ....");
+    //console.log("menu init complete ....");
+
+    var strServerName = "{% GetSelectServerName %}";
+
+    function SocketOpen()
+    {
+        //$('#txt_monitor_server').text('SERVER : ' + vServerName +'-Connect : TRUE' );
+    }
+    function SocketError()
+    {
+        console.log("disconnect");
+        $('#txt_monitor_server').text('SERVER : ' + vServerName +'-Connect : FALSE' );
+    }
+    function SocketOnClose()
+    {
+        console.log("disconnect");
+        $('#txt_monitor_server').text('SERVER : ' + vServerName +'-Connect : FALSE' );
+    }
+    $( window ).load(function() {
+        /*$.post("/Login/GetMonitorServerInfoNew" , function (data) {
+            if ( data.Status == 0)
+            {
+                WebSocketSetOpen(SocketOpen);
+                WebSocketSetError(SocketError);
+                WebSocketSetClose(SocketOnClose);
+                WebSocketInit(data.Url);
+            }
+            else
+            {
+                $('#txt_monitor_server').text('SERVER : ' + vServerName+'-Connect : FALSE' );
+            }
+        });*/
+    });
+    $( window ).unload(function() {
+        WebSocketClose();
+        $('#txt_monitor_server').text('SERVER : ' + vServerName +'-Connect : FALSE' );
+    });
 </script>

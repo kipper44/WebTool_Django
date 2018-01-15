@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from WebTool.common.couchdb import CouchbaseManager
 from types import SimpleNamespace as Namespace
 import json
-from django.http import JsonResponse,HttpResponse
+from django.http import JsonResponse,HttpResponseRedirect
 from WebTool.common.common import eDataBase
 #import os
 
@@ -26,6 +26,7 @@ def InitCouchBase( ):
 
 
 def LoginProcess(request):
+
     cbq = CouchbaseManager.instance()
     cBucket = cbq.get_bucket(eDataBase.GM_Tool)
     userid = request.POST.get('id')
@@ -38,7 +39,10 @@ def LoginProcess(request):
         cUser = json.loads(ret, encoding="utf-8", object_hook=lambda d: Namespace(**d))
         if cUser.passwd == userpasswd:
             cbq.SelectServer(strServer)
+            cbq.SetLoginUser(userid)
             bReturn = True
+            #request.COOKIES["LoginUser"] = userid
+            request.session['LoginUser'] = userid
         else: pass
     except Exception as e:
         print(str(e))
@@ -52,6 +56,12 @@ def Index(request):
 
     if request.method =='POST' :
         return LoginProcess(request)
+
+    #login_user = request.COOKIES.get('LoginUser', 'None')
+    login_user = request.session.get('LoginUser', 'None')
+    if 'None' != login_user :
+        return LoginMain(request)
+
     cbq = CouchbaseManager.instance()
 
     cbq.select_db(eDataBase.GM_Tool)
@@ -68,5 +78,6 @@ def Index(request):
 
 def LoginMain(request):
     cbq = CouchbaseManager.instance()
+    cServerInfo = cbq.get_select_server_info()
 
-    return render(request, 'WebTool/LoginMain.html')
+    return render(request, 'WebTool/LoginMain.html',{"server_name": cServerInfo.name,"server_ip": cServerInfo.IP})
