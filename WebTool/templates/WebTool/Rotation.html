@@ -68,8 +68,8 @@
             </tr>
         </tbody>
     </table>
-    <button v-on:click="save_data">SUBMIT DATA</button>
-    <pre>[[ $data  ]]</pre>
+    <button v-on:click="save_data" class="btn btn-primary">저장</button>
+    <!--<pre>[[ $data  ]]</pre> -->
 </div>
 <script>
 var strRotationTable = "{% GetRotationTable %}".replace(/&quot;/gi,"\"");;

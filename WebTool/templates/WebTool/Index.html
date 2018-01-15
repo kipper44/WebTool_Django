@@ -72,7 +72,7 @@
         <title>[[title]]</title>
         <table >
             <tr>
-                <td align="right"><label>Select Server : </label></td>
+                <td align="right"><label>Select Server &nbsp </label></td>
                 <td>
                     <select v-model="selectedserver" class="form-control">
                            <option v-for="sv in servers" v-bind:value="sv" >
@@ -82,11 +82,11 @@
                 </td>
             </tr>
             <tr>
-                <td align="right"><label>Login ID : </label></td>
+                <td align="right"><label>Login ID  &nbsp</label></td>
                 <td><input v-model="userid"  class="form-control"></td>
             </tr>
             <tr>
-                <td align="right"><label>Password : </label></td>
+                <td align="right"><label>Password  &nbsp</label></td>
                 <td><input v-model="pass" type="password" class="form-control" ></td>
             </tr>
         </table>
@@ -94,7 +94,7 @@
         <button v-on:click="onlogin" class="btn btn-primary " style="margin-left: 132px;" >접속</button>
         <button id="show-modal" @click="showModal = true" class="btn btn-primary " style="margin-left: 0px;">Show Modal</button>
         <br>
-       <span>Selected: [[ selectedserver ]]</span>
+       <!--<span>Selected: [[ selectedserver ]]</span> -->
         <modal v-if="showModal" @close="showModal = false">
             <!--
               you can use custom content here to overwrite

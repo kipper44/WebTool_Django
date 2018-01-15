@@ -81,3 +81,13 @@ def LoginMain(request):
     cServerInfo = cbq.get_select_server_info()
 
     return render(request, 'WebTool/LoginMain.html',{"server_name": cServerInfo.name,"server_ip": cServerInfo.IP})
+
+def LogOut(request):
+    try:
+        session_keys = list(request.session.keys())
+        for key in session_keys:
+            del request.session[key]
+        cbq = CouchbaseManager.instance()
+        del cbq
+    except Exception as e : pass
+    return HttpResponseRedirect('/')

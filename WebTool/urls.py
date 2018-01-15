@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^$', LoginView.Index),
     url(r'^Index', LoginView.Index),
     url(r'^LoginMain', LoginView.LoginMain),
+    url(r'^LogOut', LoginView.LogOut),
     url(r'^ModeView', ModeView.ModeView),
     url(r'^RotationView', Rotation.RotationView),
 
