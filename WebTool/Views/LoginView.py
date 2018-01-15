@@ -21,9 +21,6 @@ def InitCouchBase( ):
     cbq.Add(data["Config"][1]["index"], data["Config"][1]["name"], data["Config"][1]["ip"], data["Config"][1]["user"], data["Config"][1]["pass"], data["Config"][1]["name"])
     cbq.Add(data["Config"][2]["index"], data["Config"][2]["name"], data["Config"][2]["ip"], data["Config"][2]["user"], data["Config"][2]["pass"], data["Config"][2]["name"])
 
-    #cbq.Add(eDataBase.GM_Event,"GM_eventdb_GM", "10.80.40.71", "gmtool", "exgames1030**", "eventdb_GM")
-    #cbq.Add(eDataBase.GM_Trace,"GM_gm_trace_GM", "10.80.40.71", "gmtool", "exgames1030**", "gm_trace_GM")
-
     #dir = os.getcwd()
     #print(dir)
 
