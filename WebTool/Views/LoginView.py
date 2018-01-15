@@ -4,16 +4,28 @@ from types import SimpleNamespace as Namespace
 import json
 from django.http import JsonResponse,HttpResponse
 from WebTool.common.common import eDataBase
+#import os
+
 #from django.contrib.auth.models import User
 #from django.contrib.auth import login
 
 
 def InitCouchBase( ):
-    cbq = CouchbaseManager.instance()
-    cbq.Add(eDataBase.GM_Tool, "GM_GmTool_GM", "10.80.40.71", "gmtool", "exgames1030**", "GmTool_GM")
-    cbq.Add(eDataBase.GM_Event,"GM_eventdb_GM", "10.80.40.71", "gmtool", "exgames1030**", "eventdb_GM")
-    cbq.Add(eDataBase.GM_Trace,"GM_gm_trace_GM", "10.80.40.71", "gmtool", "exgames1030**", "gm_trace_GM")
+    json_data = open('./WebTool/Config.json').read()
+    data = json.loads(json_data)
+    #print(data)
 
+    #print(data["Config"][0])
+    cbq = CouchbaseManager.instance()
+    cbq.Add(data["Config"][0]["index"], data["Config"][0]["name"], data["Config"][0]["ip"], data["Config"][0]["user"], data["Config"][0]["pass"], data["Config"][0]["name"])
+    cbq.Add(data["Config"][1]["index"], data["Config"][1]["name"], data["Config"][1]["ip"], data["Config"][1]["user"], data["Config"][1]["pass"], data["Config"][1]["name"])
+    cbq.Add(data["Config"][2]["index"], data["Config"][2]["name"], data["Config"][2]["ip"], data["Config"][2]["user"], data["Config"][2]["pass"], data["Config"][2]["name"])
+
+    #cbq.Add(eDataBase.GM_Event,"GM_eventdb_GM", "10.80.40.71", "gmtool", "exgames1030**", "eventdb_GM")
+    #cbq.Add(eDataBase.GM_Trace,"GM_gm_trace_GM", "10.80.40.71", "gmtool", "exgames1030**", "gm_trace_GM")
+
+    #dir = os.getcwd()
+    #print(dir)
 
 
 def LoginProcess(request):

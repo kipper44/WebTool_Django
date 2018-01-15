@@ -38,13 +38,21 @@ def GetModeTable():
     #    #list_values = [v for v in cModeTable.values()]
     return json.dumps(cModeTable, ensure_ascii=False)
 
+
+def InitRotationTable():
+    strJson = '{\"strType\": \"Rotation\",\"vecRotations\": [  { \"iIndex\": 1,\"strStartDate\": \"2018-01-01 00:00:00\",\"strEndDate\": \"2018-01-31 23:59:59\",\"iTargetIndex_1\": -1,\"iTargetIndex_2\": -1,\"iTargetIndex_3\": -1,\"iTargetIndex_4\": -1,\"iTargetIndex_5\": -1  } ]}'
+    return strJson
+
 @register.simple_tag()
 def GetRotationTable():
     cbq = CouchbaseManager.instance()
+    try:
+        cbq.select_db(eDataBase.GAME_EVENT)
+        cRotationTable = cbq.get().get("RotationTable_Python").value
+        return json.dumps(cRotationTable, ensure_ascii=False)
+    except Exception as e :
+        return InitRotationTable()
 
-    cbq.select_db(eDataBase.GAME_EVENT)
-    cRotationTable = cbq.get().get("RotationTable_Python").value
-    return json.dumps(cRotationTable, ensure_ascii=False)
 
 @register.simple_tag()
 def GetRotationMerTable():
