@@ -5,6 +5,14 @@ from couchbase.n1ql import N1QLQuery
 from WebTool.common.common import eDataBase
 
 class CouchbaseManager(SingletonInstance) :
+
+    def clear(self):
+        self.mapDbPool ={}
+        self.selectKey =1
+        self.mapServerInfo = {}
+        self.selectServer=""
+        self.strLoginUser =""
+
     def __init__(self):
         self.mapDbPool ={}
         self.selectKey =1
@@ -13,15 +21,17 @@ class CouchbaseManager(SingletonInstance) :
         self.strLoginUser =""
     def __str__(self):
         return self.mapDbPool.__str__()
+    def Get_DBPool_Size(self):
+        return len(self.mapDbPool)
 
     def AddServerInfo(self,name,objInfo):
-        self.mapDbPool[name] = objInfo;
+        self.mapServerInfo[name] = objInfo;
 
     def SetLoginUser(self,strUserName):
         self.strLoginUser =strUserName
 
     def SelectServer(self,servername):
-        cSelectServer = self.mapDbPool[servername]
+        cSelectServer = self.mapServerInfo[servername]
         Index = eDataBase.GAME_EVENT;
         for bucket in cSelectServer.DB:
             ip = bucket.uri[7:]
@@ -64,4 +74,4 @@ class CouchbaseManager(SingletonInstance) :
         return self.selectServer
 
     def get_select_server_info(self):
-        return self.mapDbPool[self.selectServer]
+        return self.mapServerInfo[self.selectServer]

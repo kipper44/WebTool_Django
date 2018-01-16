@@ -53,7 +53,7 @@
                 <a class="nav-link" href="/LoginMain">Home <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
-                <a name="txt_monitor_server" >SERVER : None-Connect : FALSE </a>
+                <a id="txt_monitor_server" >SERVER : None-Connect : FALSE </a>
               </li>
               <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">관리<span class="caret"></span></a>
@@ -132,7 +132,7 @@
     });
     //console.log("menu init complete ....");
 
-    var strServerName = "{% GetSelectServerName %}";
+    var vServerName = "{% GetSelectServerName %}";
 
     function SocketOpen()
     {
@@ -149,7 +149,7 @@
         $('#txt_monitor_server').text('SERVER : ' + vServerName +'-Connect : FALSE' );
     }
     $( window ).load(function() {
-        /*$.post("/Login/GetMonitorServerInfoNew" , function (data) {
+        $.post("/getselectserverurl" , function (data) {
             if ( data.Status == 0)
             {
                 WebSocketSetOpen(SocketOpen);
@@ -161,10 +161,19 @@
             {
                 $('#txt_monitor_server').text('SERVER : ' + vServerName+'-Connect : FALSE' );
             }
-        });*/
+        });
     });
     $( window ).unload(function() {
         WebSocketClose();
         $('#txt_monitor_server').text('SERVER : ' + vServerName +'-Connect : FALSE' );
     });
+
+      var vTimter = setInterval(function () { TopMenuRefreshTimer() }, 1000);
+
+        function TopMenuRefreshTimer() {
+
+
+            WebSocketTryReConnect();
+
+    };
 </script>

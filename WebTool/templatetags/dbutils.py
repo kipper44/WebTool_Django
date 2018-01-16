@@ -86,7 +86,7 @@ def GetRotationMerTable():
 
         strJson = strJson[:-1]
         strJson += "]"
-        print(strJson)
+        #print(strJson)
     except Exception as e:
         print("error : " + str(e))
     else:

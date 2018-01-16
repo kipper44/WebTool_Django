@@ -1,0 +1,92 @@
+{% extends "WebTool/layout.html" %}
+{% load staticfiles %}
+{%block main_header %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/server_monitor.css' %}">
+    <title>서버 관리</title>
+{% endblock %}
+
+
+{% block main_body %}
+
+<p>서버 관리</p>
+
+<div id="main">
+
+    <div class="bar">
+
+        <!-- These two buttons switch the layout variable,
+             which causes the correct UL to be shown. -->
+
+      <button class = "bar-btn" >전체서버종료 </button>
+      <button class = "bar-btn" >전체서버업데이트 </button>
+      <button class = "bar-btn" >전체서버업데이트 </button>
+      <button class = "bar-btn" >전체서버업데이트 </button>
+        <a class="list-icon" v-bind:class="{ 'active': layout == 'list'}" v-on:click="layout = 'list'"></a>
+        <a class="grid-icon" v-bind:class="{ 'active': layout == 'grid'}" v-on:click="layout = 'grid'"></a>
+    </div>
+
+    <!-- We have two layouts. We choose which one to show depending on the "layout" binding -->
+
+    <ul v-if="layout == 'grid'" class="grid">
+        <!-- A view with big photos and no text -->
+        <li v-for="(server,index) in servers">
+            <table class="on">
+                <tr>
+                    <td class="block">GroupNo [[ server.strGroupIndex ]]</td>
+                    <p v-if="server.strInstall ='1'">
+                    </p>
+                    <p v-else-if="server.strInstall ='2'">
+
+                    </p>
+                </tr>
+                <tr>
+                    <td class="block">IP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [[ server.strIP ]]</td>
+                    <td class="block"><button class="server_state" title="서버시작"></button></td>
+                    <td class="block"><button class="server_state" title="서버종료"></button></td>
+                </tr>
+                <tr>
+                    <td class="block">Name &nbsp;&nbsp;&nbsp; [[ server.strName ]]</td>
+                    <td class="block"><button class="server_state" title="서버업데이트"></button></td>
+                    <td class="block"><button class="server_state" title="에이전트업데이트"></button></td>
+                </tr>
+            </table>
+
+        </li>
+    </ul>
+
+    <ul v-if="layout == 'list'" class="list">
+        <!-- A compact view smaller photos and titles -->
+        <li v-for="server in servers">
+            <p>[[ server.strName ]]</p>
+            <p>[[ server.strName ]]</p>
+            <p>[[ server.strIP ]]</p>
+        </li>
+    </ul>
+
+</div>
+
+
+<script>
+var vServerMonitor = new Vue({
+    delimiters: ['[[', ']]'],
+    el: '#main',
+    data: {
+        // The layout mode, possible values are "grid" or "list".
+        layout: 'grid',
+        servers: []
+
+    },
+computed:{
+    classChanger: function(){
+        var theClass = 'table_on';
+        //if(this.conversation.minimized == false){
+        //    theClass = 'classA';
+        //}
+        return theClass;
+    }
+}
+});
+
+</script>
+<script src="{% static 'js/server_monitor.js' %}"></script>
+{% endblock %}

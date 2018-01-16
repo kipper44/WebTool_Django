@@ -1,7 +1,3 @@
-{% extends "WebTool/layout.html" %}
-{% load staticfiles %}
-{%block main_header %}
-<style>
 /* Hide un-compiled mustache bindings
 until the Vue instance is ready */
 
@@ -153,132 +149,40 @@ ul.grid{
 ul.grid li{
     padding: 2px;
     float:left;
-    width:250px;
-    height:200px;
+    width:280px;
+    //height:200px;
     border: 1px solid #000;
-    background-image: url("static/image/server_image.png");
-    background-size: 200px;
+
 }
 
 ul.grid li img{
-    width:280px;
+    width:300px;
     height:280px;
     object-fit: cover;
     display:block;
     border:none;
 }
-</style>
 
-{% endblock %}
+ul.grid li table{
+    padding: 2px;
+    //border: 1px solid black;
+    color: #4286f4;
+    opacity : 1 !important;
+    font-weight: bolder;
+    z-index:1;
+    float:center;
+    position:relative;
+    width : inherit;
+    height : inherit;
+}
 
-{% block main_body %}
+ul.grid li table.on{
+    //background-color: green;
+}
 
-<p>WellCome Main windows</p>
+ul.grid li table.off{
+    //background-color: red;
+}
 
-<div id="main" v-cloak>
 
-    <div class="bar">
-
-        <!-- These two buttons switch the layout variable,
-             which causes the correct UL to be shown. -->
-
-      <button class = "bar-btn" >전체서버종료 </button>
-      <button class = "bar-btn" >전체서버업데이트 </button>
-      <button class = "bar-btn" >전체서버업데이트 </button>
-      <button class = "bar-btn" >전체서버업데이트 </button>
-        <a class="list-icon" v-bind:class="{ 'active': layout == 'list'}" v-on:click="layout = 'list'"></a>
-        <a class="grid-icon" v-bind:class="{ 'active': layout == 'grid'}" v-on:click="layout = 'grid'"></a>
-    </div>
-
-    <!-- We have two layouts. We choose which one to show depending on the "layout" binding -->
-
-    <ul v-if="layout == 'grid'" class="grid">
-        <!-- A view with big photos and no text -->
-        <li v-for="a in articles">
-            <div class="card"  style="width: 20rem; border: 1px solid black;">
-              <!--<a v-bind:href="a.url" target="_blank"><img v-bind:src="a.image.large" /></a> -->
-              <p>[[ a.title ]]</p>
-              <p>[[ a.servern ]]</p>
-            </div>
-
-        </li>
-    </ul>
-
-    <ul v-if="layout == 'list'" class="list">
-        <!-- A compact view smaller photos and titles -->
-        <li v-for="a in articles">
-            <a v-bind:href="a.url" target="_blank"><img v-bind:src="a.image.small" /></a>
-            <p>[[ a.title ]]</p>
-            <p>[[ a.servern ]]</p>
-        </li>
-    </ul>
-
-</div>
-<script>
-var demo = new Vue({
-    delimiters: ['[[', ']]'],
-    el: '#main',
-    data: {
-        // The layout mode, possible values are "grid" or "list".
-        layout: 'grid',
-
-        articles: [{
-            "title": "CSS Variables",
-            "servern": "Dev1",
-            "url": "https://tutorialzine.com/2016/03/what-you-need-to-know-about-css-variables/",
-            "image": {
-                "large": "https://tutorialzine.com/media/2016/03/css-variables.jpg",
-                "small": "https://tutorialzine.com/media/2016/03/css-variables.jpg"
-            }
-        },
-        {
-            "title": "Freebie: 4 Great Looking Pricing Tables",
-            "servern": "Dev4",
-            "url": "https://tutorialzine.com/2016/02/freebie-4-great-looking-pricing-tables/",
-            "image": {
-                "large": "https://tutorialzine.com/media/2016/02/great-looking-pricing-tables.jpg",
-                "small": "https://tutorialzine.com/media/2016/02/great-looking-pricing-tables.jpg"
-            }
-        },
-        {
-            "title": "20 Interesting JavaScript and CSS Libraries for February 2016",
-            "servern": "Dev3",
-            "url": "https://tutorialzine.com/2016/02/20-interesting-javascript-and-css-libraries-for-february-2016/",
-            "image": {
-                "large": "https://tutorialzine.com/media/2016/02/interesting-resources-february.jpg",
-                "small": "https://tutorialzine.com/media/2016/02/interesting-resources-february.jpg"
-            }
-        },
-        {
-            "title": "Quick Tip: The Easiest Way To Make Responsive Headers",
-            "servern": "Dev2",
-            "url": "https://tutorialzine.com/2016/02/quick-tip-easiest-way-to-make-responsive-headers/",
-            "image": {
-                "large": "https://tutorialzine.com/media/2016/02/quick-tip-responsive-headers.png",
-                "small": "https://tutorialzine.com/media/2016/02/quick-tip-responsive-headers.png"
-            }
-        },
-        {
-            "title": "Learn SQL In 20 Minutes",
-            "servern": "Preview_QA",
-            "url": "https://tutorialzine.com/2016/01/learn-sql-in-20-minutes/",
-            "image": {
-                "large": "https://tutorialzine.com/media/2016/01/learn-sql-20-minutes.png",
-                "small": "https://tutorialzine.com/media/2016/01/learn-sql-20-minutes.png"
-            }
-        },
-        {
-            "title": "Creating Your First Desktop App With HTML, JS and Electron",
-            "servern": "Preview",
-            "url": "https://tutorialzine.com/2015/12/creating-your-first-desktop-app-with-html-js-and-electron/",
-            "image": {
-                "large": "https://tutorialzine.com/media/2015/12/creating-your-first-desktop-app-with-electron.png",
-                "small": "https://tutorialzine.com/media/2015/12/creating-your-first-desktop-app-with-electron.png"
-            }
-        }]
-
-    }
-});
-
-</script>
-{% endblock %}
+ .server_state {width: 32px;height: 32px;}

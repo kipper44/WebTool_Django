@@ -51,15 +51,19 @@ def LoginProcess(request):
     return JsonResponse({'Result':bReturn}, safe=False)
 
 def Index(request):
+    cbq = CouchbaseManager.instance()
+    db_size = cbq.Get_DBPool_Size()
 
-    InitCouchBase()
+    if ( 0 == db_size) :
+        InitCouchBase()
 
     if request.method =='POST' :
         return LoginProcess(request)
 
     #login_user = request.COOKIES.get('LoginUser', 'None')
-    login_user = request.session.get('LoginUser', 'None')
-    if 'None' != login_user :
+    #login_user = request.session.get('LoginUser', 'None')
+    #if 'None' != login_user :
+    if (0 != db_size):
         return LoginMain(request)
 
     cbq = CouchbaseManager.instance()
@@ -88,6 +92,11 @@ def LogOut(request):
         for key in session_keys:
             del request.session[key]
         cbq = CouchbaseManager.instance()
-        del cbq
+        cbq.clear()
     except Exception as e : pass
     return HttpResponseRedirect('/')
+
+def getselectserverurl(request):
+    cbq = CouchbaseManager.instance()
+    cServerInfo = cbq.get_select_server_info()
+    return JsonResponse({'Status': '0','Url': cServerInfo.IP}, safe=False)

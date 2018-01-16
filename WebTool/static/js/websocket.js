@@ -25,6 +25,7 @@ function WebSocketInit(strUrl)
         return;
     }
     g_WebSocket.onopen = function (e) {
+        //console.log("socket open");
         if (g_WebSocketOnOpen != null) g_WebSocketOnOpen();
     };
 
