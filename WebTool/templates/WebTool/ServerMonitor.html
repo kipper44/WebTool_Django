@@ -1,8 +1,9 @@
 {% extends "WebTool/layout.html" %}
 {% load staticfiles %}
 {%block main_header %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/server_monitor.css' %}">
     <title>서버 관리</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/server_monitor.css' %}">
+
 {% endblock %}
 
 
@@ -17,10 +18,12 @@
         <!-- These two buttons switch the layout variable,
              which causes the correct UL to be shown. -->
 
-      <button class = "bar-btn" >전체서버종료 </button>
-      <button class = "bar-btn" >전체서버업데이트 </button>
-      <button class = "bar-btn" >전체서버업데이트 </button>
-      <button class = "bar-btn" >전체서버업데이트 </button>
+        <button class = "bar-btn" >모든서버시작 </button>
+        <button class = "bar-btn" >모든서버종료 </button>
+        <button class = "bar-btn" >모든서버패치 </button>
+        <button class = "bar-btn" >서버설치 </button>
+        <button class = "bar-btn" >AgentUpdateAll </button>
+        <button class = "bar-btn" >AgentServerUpdate </button>
         <a class="list-icon" v-bind:class="{ 'active': layout == 'list'}" v-on:click="layout = 'list'"></a>
         <a class="grid-icon" v-bind:class="{ 'active': layout == 'grid'}" v-on:click="layout = 'grid'"></a>
     </div>
@@ -30,24 +33,48 @@
     <ul v-if="layout == 'grid'" class="grid">
         <!-- A view with big photos and no text -->
         <li v-for="(server,index) in servers">
-            <table class="on">
+            <table class="on" >
                 <tr>
-                    <td class="block">GroupNo [[ server.strGroupIndex ]]</td>
-                    <p v-if="server.strInstall ='1'">
-                    </p>
-                    <p v-else-if="server.strInstall ='2'">
-
-                    </p>
+                    <td>GroupNo [[ server.strGroupIndex ]]</td>
+                    <td>
+                        <p v-if="server.strInstall == '1' && server.eStatus  =='0'"> <!-- 서버 설치된상태 이면 -->
+                            <input type='image' src="{% static 'icon/green_light.png' %}"  title='Status:START' class='server_state' >
+                        </p>
+                        <p v-else-if="server.strInstall == '1' && server.eStatus  =='1'">
+                            <input type='image' src="{% static 'icon/red_light.png' %}"  title='Status:STOP' class='server_state' >
+                        </p>
+                        <p v-else-if="server.strInstall == '1' && server.eStatus  =='2'">
+                            <input type='image' src="{% static 'icon/server_state_update.png' %}"  title='Status:PATCHING' class='server_state' >
+                        </p>
+                        <p v-else-if="server.strInstall == '1' && server.eStatus  =='3'">
+                            <input type='image' src="{% static 'icon/patch_complete.png' %}"  title='Status:PATCH_COMPLETE' class='server_state' >
+                        </p>
+                        <p v-else-if="server.strInstall == '1' && server.eStatus  =='4'">
+                            <input type='image' src="{% static 'icon/patch_error.png' %}"  title='Status:PATCH_ERROR' class='server_state' >
+                        </p>
+                        <p v-else-if="server.strInstall == '1' && server.eStatus  =='5'">
+                            <input type='image' src="{% static 'icon/server_agent_update.png' %}"  title='Status:AGENT_PATCHING' class='server_state' >
+                        </p>
+                        <p v-else-if ="server.strInstall == '2' && server.eStatus =='2'" > <!-- 서버가 설치 되지 않은 상태 -->
+                                <input type='image' src="{% static 'icon/server_state_update.png' %}"  title='Status:PATCHING' class='server_state' >
+                        </p>
+                        <p v-else-if="server.strInstall == '2' && server.eStatus  =='3'">
+                            <input type='image' src="{% static 'icon/patch_complete.png' %}"  title='Status:PATCH_COMPLETE' class='server_state' >
+                        </p>
+                        <p v-else>
+                            <input type='image' src="{% static 'icon/install.png' %}"  title='Status:NOT INSTALLED SERVER' class='server_state' >
+                        </p>
+                    </td>
                 </tr>
                 <tr>
-                    <td class="block">IP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [[ server.strIP ]]</td>
-                    <td class="block"><button class="server_state" title="서버시작"></button></td>
-                    <td class="block"><button class="server_state" title="서버종료"></button></td>
+                    <td class="">IP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [[ server.strIP ]]</td>
+                    <td class=""><input type='image' src="{% static 'icon/server_start.png' %}"  title='Server Start' class='btn_server_start server_state'></td>
+                    <td class=""><input type='image' src="{% static 'icon/server_stop.png' %}" title='Server Stop' class='btn_server_stop server_state' ></td>
                 </tr>
                 <tr>
-                    <td class="block">Name &nbsp;&nbsp;&nbsp; [[ server.strName ]]</td>
-                    <td class="block"><button class="server_state" title="서버업데이트"></button></td>
-                    <td class="block"><button class="server_state" title="에이전트업데이트"></button></td>
+                    <td class="">Name &nbsp;&nbsp;&nbsp; [[ server.strName ]]</td>
+                    <td class=""><input type='image' src="{% static 'icon/server_update.png' %}"  title='Server Update' class='btn_server_update server_state' ></td>
+                    <td class=""><input type='image' src="{% static 'icon/agent_patch.png' %}"  title='Agent Update' class='btn_agent_updates server_state' ></td>
                 </tr>
             </table>
 

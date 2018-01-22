@@ -4,6 +4,7 @@ from types import SimpleNamespace as Namespace
 import json
 from django.http import JsonResponse,HttpResponseRedirect
 from WebTool.common.common import eDataBase
+from  WebTool.common.excel_util import excel_to_json,excel_to_json_new,find_all_excel_file,json_table_file_read
 #import os
 
 #from django.contrib.auth.models import User
@@ -51,6 +52,11 @@ def LoginProcess(request):
     return JsonResponse({'Result':bReturn}, safe=False)
 
 def Index(request):
+    #tname , jsonstr = excel_to_json_new('D:/Work/Project/80_ServerProject/Source/ServerPatchUtil/WebGMTool_mvc/GameServerTableNew/ModuleItemTable.xlsm');
+    #print(tname,jsonstr)
+    #find_all_excel_file('D:/Work/Project/80_ServerProject/Source/ServerPatchUtil/WebGMTool_mvc/GameServerTableNew')
+    tsting = json_table_file_read('../NewTable/GameResultReward.json')
+    print(tsting)
     cbq = CouchbaseManager.instance()
     db_size = cbq.Get_DBPool_Size()
 
@@ -63,7 +69,7 @@ def Index(request):
     #login_user = request.COOKIES.get('LoginUser', 'None')
     #login_user = request.session.get('LoginUser', 'None')
     #if 'None' != login_user :
-    if (0 != db_size):
+    if (3 < db_size):
         return LoginMain(request)
 
     cbq = CouchbaseManager.instance()

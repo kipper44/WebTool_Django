@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
-from  WebTool.Views import LoginView,ModeView,Rotation,ServerMonitor
+from  WebTool.Views import LoginView,ModeView,Rotation,ServerMonitor,ServerManger
 
 
 urlpatterns = [
@@ -12,6 +12,8 @@ urlpatterns = [
     url(r'^ModeView', ModeView.ModeView),
     url(r'^RotationView', Rotation.RotationView),
     url(r'^ServerMonitorView', ServerMonitor.ServerMonitorView),
+    url(r'^GameServerTableNew', ServerManger.NewServerTableVeiw),
+
 
 
 ]

@@ -1,0 +1,171 @@
+{% extends "WebTool/layout.html" %}
+{% load staticfiles %}
+{%block main_header %}
+
+{% endblock %}
+
+
+{% block main_body %}
+
+<H1>게임 서버 테이블 </H1>
+
+
+<div id="app" class="container" >
+<div>
+    <input type="file" name="lstUploadFile" class="file_selector" accept=".xlsx,.xml,.json,.xlsm" multiple />
+    <input type="submit" value="Upload File to Server" class="file_upload_btn" />
+</div>
+    <!--<div style="width: 714px;height:400px; overflow:auto;"> -->
+    <table class="table"  style="width: 714px ; height:300px">
+        <thead >
+            <tr>
+                <th class="text-center" style="width: 80px">파일명</th>
+            </tr>
+        </thead>
+        <tbody  >
+            <tr v-for="(row,index) in table">
+                <td>
+                    <H4>[[ row ]] </H4>
+                </td>
+                <td>
+                    <button class="btn btn-primary" @click="addRow([[ index ]])">다운로드</button>
+                    <button class="btn btn-primary" @click="removeRow([[ index ]])">삭제</button>
+                    <button class="btn btn-primary" @click="removeRow([[ index ]])">저장</button>
+                    <button class="btn btn-primary" @click="removeRow([[ index ]])">서버적용</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <!--</div> -->
+    <!--<pre>{{ lxs_files }}</pre> -->
+</div>
+
+<script type="text/javascript">
+
+var strfiles = "{{ lxs_files }}".replace(/&quot;/gi,"\"");;
+strfiles =strfiles.replace(/&quot;/gi,"");
+strfiles =strfiles.replace(/&#39;/gi,"\"");
+var vm = new Vue({
+    delimiters: ['[[', ']]'],
+    el: '#app',
+    data: {
+        table: [],
+        }
+    ,
+  mounted : function()
+  {
+        try{
+            this.table = $.parseJSON(strfiles);
+            }
+           catch(error){
+            console.log(error.message);
+           }
+  }
+    ,
+    methods: {
+        addRow: function (index) {
+            try {
+                this.table.mode.splice(index , 0, {});
+            } catch(e)
+            {
+                console.log(e);
+            }
+        },
+        removeRow: function (index) {
+            this.table.mode.splice(index, 1);
+        }
+    }
+});
+
+
+    $(document).ready(function () {
+
+        $('body').on('click', '.file_upload_btn', function () {
+            var files = $('.file_selector').prop("files");
+            console.log(files);
+
+            if (files.length > 0) {
+                if (window.FormData !== undefined) {
+                    var data = new FormData();
+                    for (var x = 0; x < files.length; x++){
+                        data.append("file" + x, files[x]);
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: '/GameServerTableNew/UploadFiles',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        success: function(result) {
+                            console.log(result);
+                            alert(result.Message);
+                            window.location.href = '/GameServerTableNew/GameServerTableNew';
+                        },
+                        error: function (xhr, status, p3, p4){
+                            var err = "Error " + " " + status + " " + p3 + " " + p4;
+                            if (xhr.responseText && xhr.responseText[0] == "{")
+                                err = JSON.parse(xhr.responseText).Message;
+                            console.log(err);
+                        }
+                    });
+                } else {
+                    alert("This browser doesn't support HTML5 file uploads!");
+                }
+            }
+
+           // $.post("/GameServerTable/UploadFiles", function (data) {
+           //     alert(data.Message);
+                //window.location.href = '/GameServerTable/GameServerTable';
+            //});
+
+        });
+
+        $('body').on('click', '.file_down_class', function () {
+            var trRow = $(this).parents('tr');
+
+            var tdFile = trRow.children("td:nth-child(1)");
+            var strfile = '/GameServerTableNew/'+ $(tdFile).find('span').html();
+            window.location=strfile;
+        });
+
+        $('body').on('click', '.class_btn_delete', function () {
+            var trRow = $(this).parents('tr');
+
+            var tdFile = trRow.children("td:nth-child(1)");
+            //alert($(tdFile).find('span').html());
+            $.post(encodeURI("/GameServerTableNew/RemoveTable?strTblName="+$(tdFile).find('span').html()), function (data) {
+                alert(data.Message);
+                window.location.href = '/GameServerTableNew/GameServerTableNew';
+            });
+
+        });
+
+
+        $('body').on('click', '.class_btn_todb', function () {
+            var trRow = $(this).parents('tr');
+
+            var tdFile = trRow.children("td:nth-child(1)");
+            //alert($(tdFile).find('span').html());
+            //var strfile = '/Table/'+ $(tdFile).find('span').html();
+            //window.location=strfile;
+            $.post(encodeURI("/GameServerTableNew/DBSaveTable?strTblName="+$(tdFile).find('span').html()), function (data) {
+                alert(data.Message);
+            });
+
+        });
+        $('body').on('click', '.class_btn_sync_server', function () {
+            var trRow = $(this).parents('tr');
+
+            var tdFile = trRow.children("td:nth-child(1)");
+            $.post(encodeURI("/GameServerTableNew/TableSyncServer?strTblName="+$(tdFile).find('span').html()), function (data) {
+                alert(data.Message);
+            });
+
+        });
+
+
+   });
+</script>
+
+{% endblock %}
