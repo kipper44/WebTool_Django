@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^RotationView', Rotation.RotationView),
     url(r'^ServerMonitorView', ServerMonitor.ServerMonitorView),
     url(r'^GameServerTableNew', ServerManger.NewServerTableVeiw),
+    url(r'^FileDownload',ServerManger.FileDownload),
+    url(r'^UploadFile',ServerManger.UploadFile),
 
 
 

@@ -55,8 +55,8 @@ def Index(request):
     #tname , jsonstr = excel_to_json_new('D:/Work/Project/80_ServerProject/Source/ServerPatchUtil/WebGMTool_mvc/GameServerTableNew/ModuleItemTable.xlsm');
     #print(tname,jsonstr)
     #find_all_excel_file('D:/Work/Project/80_ServerProject/Source/ServerPatchUtil/WebGMTool_mvc/GameServerTableNew')
-    tsting = json_table_file_read('../NewTable/GameResultReward.json')
-    print(tsting)
+    #tsting = json_table_file_read('../NewTable/GameResultReward.json')
+    #print(tsting)
     cbq = CouchbaseManager.instance()
     db_size = cbq.Get_DBPool_Size()
 

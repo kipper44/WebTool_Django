@@ -28,7 +28,7 @@
                     <H4>[[ row ]] </H4>
                 </td>
                 <td>
-                    <button class="btn btn-primary" @click="addRow([[ index ]])">다운로드</button>
+                    <button class="btn btn-primary file_down_class">다운로드</button>
                     <button class="btn btn-primary" @click="removeRow([[ index ]])">삭제</button>
                     <button class="btn btn-primary" @click="removeRow([[ index ]])">저장</button>
                     <button class="btn btn-primary" @click="removeRow([[ index ]])">서버적용</button>
@@ -41,6 +41,19 @@
 </div>
 
 <script type="text/javascript">
+
+
+function file_download (e){
+
+    var trRow = e.parentElement.parentElement;
+    var tdIndex = $(trRow).children("td:nth-child(1)");
+
+    //console.log($(tdIndex).text())
+
+    var strfile = '/FileDownload/'+ $(tdIndex).text();
+    window.location=strfile;
+}
+
 
 var strfiles = "{{ lxs_files }}".replace(/&quot;/gi,"\"");;
 strfiles =strfiles.replace(/&quot;/gi,"");
@@ -60,8 +73,7 @@ var vm = new Vue({
            catch(error){
             console.log(error.message);
            }
-  }
-    ,
+  },
     methods: {
         addRow: function (index) {
             try {
@@ -93,14 +105,14 @@ var vm = new Vue({
 
                     $.ajax({
                         type: "POST",
-                        url: '/GameServerTableNew/UploadFiles',
+                        url: '/UploadFile',
                         contentType: false,
                         processData: false,
                         data: data,
                         success: function(result) {
                             console.log(result);
                             alert(result.Message);
-                            window.location.href = '/GameServerTableNew/GameServerTableNew';
+                            window.location.href = '/GameServerTableNew';
                         },
                         error: function (xhr, status, p3, p4){
                             var err = "Error " + " " + status + " " + p3 + " " + p4;
@@ -122,12 +134,14 @@ var vm = new Vue({
         });
 
         $('body').on('click', '.file_down_class', function () {
-            var trRow = $(this).parents('tr');
+            var trRow = this.parentElement.parentElement;
+            var tdIndex = $(trRow).children("td:nth-child(1)");
 
-            var tdFile = trRow.children("td:nth-child(1)");
-            var strfile = '/GameServerTableNew/'+ $(tdFile).find('span').html();
+            //console.log($(tdIndex).text())
+
+            var strfile = '/FileDownload/'+ $(tdIndex).text();
             window.location=strfile;
-        });
+         });
 
         $('body').on('click', '.class_btn_delete', function () {
             var trRow = $(this).parents('tr');
@@ -165,7 +179,10 @@ var vm = new Vue({
         });
 
 
+
+
    });
+
 </script>
 
 {% endblock %}
