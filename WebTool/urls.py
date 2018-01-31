@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 from  WebTool.Views import LoginView,ModeView,Rotation,ServerMonitor,ServerManger
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 
 urlpatterns = [
@@ -19,3 +20,5 @@ urlpatterns = [
 
 
 ]
+
+urlpatterns += staticfiles_urlpatterns()
